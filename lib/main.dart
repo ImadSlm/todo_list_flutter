@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
 
@@ -13,7 +13,33 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "ToDo List",
+      title: "To-Do List",
+      home: Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              backgroundColor: Colors.orange,
+              floating: true,
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text("TO-DO LIST"),
+              ),
+              expandedHeight: 100,
+            ),
+            // SliverList(
+            //   delegate:
+            //       SliverChildBuilderDelegate((BuildContext context, int index) {
+            //     
+            //   }),
+            // )
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            print("ajouter une nouvelle tâche");
+          },
+          child: Icon(Icons.add),
+        ),
+      ),
     );
   }
 }
