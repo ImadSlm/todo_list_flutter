@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print, unnecessary_string_interpolations
 
 import 'package:flutter/material.dart';
 
@@ -19,10 +19,17 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class TDLInterface extends StatelessWidget {
+class TDLInterface extends StatefulWidget {
   const TDLInterface({
     super.key,
   });
+
+  @override
+  _TDLInterfaceState createState() => _TDLInterfaceState();
+}
+
+class _TDLInterfaceState extends State<TDLInterface> {
+  final TextEditingController _taskController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,25 +42,30 @@ class TDLInterface extends StatelessWidget {
         )),
         backgroundColor: Colors.orange,
       ),
-      body: Column(
-        children: [
-          TextField(
-            decoration: InputDecoration(labelText: "Entrez une nouvelle tâche"),
-            controller: null,
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          ElevatedButton(
-            onPressed: () {},
-            child: Icon(Icons.add_task),
-          )
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            TextField(
+              decoration:
+                  InputDecoration(labelText: "Entrez une nouvelle tâche"),
+              controller: _taskController,
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                print('${_taskController.text}');
+                _taskController.clear();
+              },
+              child: Icon(Icons.add_task),
+            )
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print("ajouter une nouvelle tâche");
-        },
+        onPressed: () {},
         child: Icon(Icons.add),
       ),
     );
