@@ -14,31 +14,40 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "To-Do List",
-      home: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              backgroundColor: Colors.orange,
-              floating: true,
-              flexibleSpace: FlexibleSpaceBar(
-                title: Text("TO-DO LIST"),
-              ),
-              expandedHeight: 100,
-            ),
-            // SliverList(
-            //   delegate:
-            //       SliverChildBuilderDelegate((BuildContext context, int index) {
-            //     
-            //   }),
-            // )
-          ],
+      home: TDLInterface(),
+    );
+  }
+}
+
+
+
+class TDLInterface extends StatelessWidget {
+  const TDLInterface({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Center(
+            child: Text(
+          "TO-DO LIST",
+          style: TextStyle(fontSize: 35),
+        )),
+        backgroundColor: Colors.orange,
+      ),
+      body: Center(
+        child: Text(
+          'Ajouter des tâches',
+          style: TextStyle(fontSize: 20),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            print("ajouter une nouvelle tâche");
-          },
-          child: Icon(Icons.add),
-        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          print("ajouter une nouvelle tâche");
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
