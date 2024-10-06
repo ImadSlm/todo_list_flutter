@@ -19,8 +19,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
-
 class TDLInterface extends StatelessWidget {
   const TDLInterface({
     super.key,
@@ -37,11 +35,20 @@ class TDLInterface extends StatelessWidget {
         )),
         backgroundColor: Colors.orange,
       ),
-      body: Center(
-        child: Text(
-          'Ajouter des tâches',
-          style: TextStyle(fontSize: 20),
-        ),
+      body: Column(
+        children: [
+          TextField(
+            decoration: InputDecoration(labelText: "Entrez une nouvelle tâche"),
+            controller: null,
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          ElevatedButton(
+            onPressed: () {},
+            child: Icon(Icons.add_task),
+          )
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
