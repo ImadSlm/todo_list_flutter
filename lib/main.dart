@@ -30,6 +30,15 @@ class TDLInterface extends StatefulWidget {
 
 class _TDLInterfaceState extends State<TDLInterface> {
   final TextEditingController _taskController = TextEditingController();
+  List<String> tasks = [];
+
+  void _addTask() {
+    String newTask = _taskController.text;
+    setState(() {
+      tasks.add(newTask);
+    });
+    _taskController.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,17 +64,31 @@ class _TDLInterfaceState extends State<TDLInterface> {
               height: 15,
             ),
             ElevatedButton(
-              onPressed: () {
-                print('${_taskController.text}');
-                _taskController.clear();
-              },
+              onPressed: _addTask,
               child: Icon(Icons.add_task),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: tasks.isEmpty
+                  ? Text("Votre liste est vide")
+                  : ListView.builder(
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(
+                            tasks[index],
+                          ),
+                        );
+                      },
+                      itemCount: tasks.length,
+                    ),
             )
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: _addTask,
         child: Icon(Icons.add),
       ),
     );
