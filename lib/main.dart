@@ -34,10 +34,12 @@ class _TDLInterfaceState extends State<TDLInterface> {
 
   void _addTask() {
     String newTask = _taskController.text;
-    setState(() {
-      tasks.add(newTask);
-    });
-    _taskController.clear();
+    if (!newTask.isEmpty) {
+      setState(() {
+        tasks.add(newTask);
+      });
+      _taskController.clear();
+    }
   }
 
   @override
