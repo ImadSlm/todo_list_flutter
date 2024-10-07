@@ -35,7 +35,7 @@ class _TDLInterfaceState extends State<TDLInterface> {
 
   void _addTask() {
     String newTask = _taskController.text;
-    if (!newTask.isEmpty) {
+    if (newTask.isNotEmpty) {
       setState(() {
         tasks.add(newTask);
       });
