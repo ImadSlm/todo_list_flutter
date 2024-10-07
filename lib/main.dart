@@ -31,6 +31,7 @@ class TDLInterface extends StatefulWidget {
 class _TDLInterfaceState extends State<TDLInterface> {
   final TextEditingController _taskController = TextEditingController();
   List<String> tasks = [];
+  bool _isTextFieldVisible = true; // Par défaut, la zone de texte est masquée
 
   void _addTask() {
     String newTask = _taskController.text;
@@ -57,20 +58,32 @@ class _TDLInterfaceState extends State<TDLInterface> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            TextField(
-              decoration:
-                  InputDecoration(labelText: "Entrez une nouvelle tâche"),
-              controller: _taskController,
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            ElevatedButton(
-              onPressed: _addTask,
-              child: Icon(Icons.add_task),
-            ),
+            if (_isTextFieldVisible)
+              Column(
+                children: [
+                  TextField(
+                    decoration:
+                        InputDecoration(labelText: "Entrez une nouvelle tâche"),
+                    controller: _taskController,
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  ElevatedButton(
+                    onPressed: _addTask,
+                    child: Icon(Icons.add_task),
+                  ),
+                ],
+              ),
             SizedBox(
               height: 20,
+            ),
+            Text(
+              "Liste : ",
+              style: TextStyle(
+                fontSize: 20,
+              ),
+              textDirection: TextDirection.ltr,
             ),
             Expanded(
               child: tasks.isEmpty
@@ -78,20 +91,22 @@ class _TDLInterfaceState extends State<TDLInterface> {
                   : ListView.builder(
                       itemBuilder: (context, index) {
                         return ListTile(
-                          title: Text(
-                            tasks[index],
-                          ),
+                          title: Text("${tasks[index]}\n________"),
                         );
                       },
                       itemCount: tasks.length,
                     ),
-            )
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addTask,
-        child: Icon(Icons.add),
+        onPressed: () {
+          setState(() {
+            _isTextFieldVisible = !_isTextFieldVisible;
+          });
+        },
+        child: Icon(_isTextFieldVisible ? Icons.close : Icons.add),
       ),
     );
   }
