@@ -59,31 +59,18 @@ class _TDLInterfaceState extends State<TDLInterface> {
         child: Column(
           children: [
             if (_isTextFieldVisible)
-              Column(
-                children: [
-                  TextField(
-                    decoration:
-                        InputDecoration(labelText: "Entrez une nouvelle tâche"),
-                    controller: _taskController,
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  ElevatedButton(
-                    onPressed: _addTask,
-                    child: Icon(Icons.add_task),
-                  ),
-                ],
-              ),
+              taskEntry(),
             SizedBox(
               height: 20,
             ),
-            Text(
-              "Liste : ",
-              style: TextStyle(
-                fontSize: 20,
+            Center(
+              child: Text(
+                "Liste : ",
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+                textDirection: TextDirection.ltr,
               ),
-              textDirection: TextDirection.ltr,
             ),
             Expanded(
               child: tasks.isEmpty
@@ -109,5 +96,24 @@ class _TDLInterfaceState extends State<TDLInterface> {
         child: Icon(_isTextFieldVisible ? Icons.close : Icons.add),
       ),
     );
+  }
+
+  Column taskEntry() {
+    return Column(
+              children: [
+                TextField(
+                  decoration:
+                      InputDecoration(labelText: "Entrez une nouvelle tâche"),
+                  controller: _taskController,
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                ElevatedButton(
+                  onPressed: _addTask,
+                  child: Icon(Icons.add_task),
+                ),
+              ],
+            );
   }
 }
