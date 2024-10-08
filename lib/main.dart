@@ -58,8 +58,7 @@ class _TDLInterfaceState extends State<TDLInterface> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            if (_isTextFieldVisible)
-              taskEntry(),
+            if (_isTextFieldVisible) taskEntry(),
             SizedBox(
               height: 20,
             ),
@@ -77,9 +76,15 @@ class _TDLInterfaceState extends State<TDLInterface> {
                   ? Text("Votre liste est vide")
                   : ListView.builder(
                       itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text("${tasks[index]}\n________"),
-                        );
+                        // return ListTile(
+                        //   title: Text("${tasks[index]}\n________"),
+                        // );
+                        return Dismissible(
+                            key: Key(tasks[index]),
+                            child: ListTile(
+                              title: Text("${tasks[index]}\n________"),
+                            ),
+                            );
                       },
                       itemCount: tasks.length,
                     ),
@@ -100,20 +105,19 @@ class _TDLInterfaceState extends State<TDLInterface> {
 
   Column taskEntry() {
     return Column(
-              children: [
-                TextField(
-                  decoration:
-                      InputDecoration(labelText: "Entrez une nouvelle tâche"),
-                  controller: _taskController,
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                ElevatedButton(
-                  onPressed: _addTask,
-                  child: Icon(Icons.add_task),
-                ),
-              ],
-            );
+      children: [
+        TextField(
+          decoration: InputDecoration(labelText: "Entrez une nouvelle tâche"),
+          controller: _taskController,
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        ElevatedButton(
+          onPressed: _addTask,
+          child: Icon(Icons.add_task),
+        ),
+      ],
+    );
   }
 }
