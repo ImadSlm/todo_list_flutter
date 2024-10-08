@@ -80,11 +80,12 @@ class _TDLInterfaceState extends State<TDLInterface> {
                         //   title: Text("${tasks[index]}\n________"),
                         // );
                         return Dismissible(
-                            key: Key(tasks[index]),
-                            child: ListTile(
-                              title: Text("${tasks[index]}\n________"),
-                            ),
-                            );
+                          key: Key(tasks[index]),
+                          background: ColoredBox(color: Colors.green),
+                          child: ListTile(
+                            title: Text("${tasks[index]}\n________"),
+                          ),
+                        );
                       },
                       itemCount: tasks.length,
                     ),
