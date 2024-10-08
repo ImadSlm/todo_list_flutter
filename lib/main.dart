@@ -78,7 +78,10 @@ class _TDLInterfaceState extends State<TDLInterface> {
                       itemBuilder: (context, index) {
                         return Dismissible(
                           key: Key(tasks[index]),
-                          background: ColoredBox(color: Colors.green),
+                          background: Container(
+                            color: Colors.green,
+                            child: Icon(Icons.done),
+                          ),
                           onDismissed: (direction) {
                             final sb =
                                 SnackBar(content: Text("Tâche supprimée"));
