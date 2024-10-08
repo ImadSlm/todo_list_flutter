@@ -101,19 +101,21 @@ class _TDLInterfaceState extends State<TDLInterface> {
                   ),
                   onDismissed: (direction) {
                     String removedTask = tasks[index];
+                    setState(() {
+                      tasks.removeAt(index);
+                    });
                     final sb = SnackBar(
                       content: Text("$removedTask supprimé"),
-                      // action: SnackBarAction(
-                      //     label: "Confirmer",
-                      //     onPressed: () {
-                      //       setState(() {
-                      //         tasks.removeAt(index);
-                      //       });
-                      //     }),
-                      //     duration: Duration(seconds: 5),
+                      action: SnackBarAction(
+                          label: "Annuler",
+                          onPressed: () {
+                            setState(() {
+                              tasks.insert(index, removedTask);
+                            });
+                          }),
+                      duration: Duration(seconds: 5),
                     );
                     ScaffoldMessenger.of(context).showSnackBar(sb);
-                    
                   },
                   child: ListTile(
                     title: Text("${tasks[index]}\n________"),
