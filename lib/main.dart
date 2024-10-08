@@ -71,30 +71,7 @@ class _TDLInterfaceState extends State<TDLInterface> {
                 textDirection: TextDirection.ltr,
               ),
             ),
-            Expanded(
-              child: tasks.isEmpty
-                  ? Text("Votre liste est vide")
-                  : ListView.builder(
-                      itemBuilder: (context, index) {
-                        return Dismissible(
-                          key: Key(tasks[index]),
-                          background: Container(
-                            color: Colors.green,
-                            child: Icon(Icons.done),
-                          ),
-                          onDismissed: (direction) {
-                            final sb =
-                                SnackBar(content: Text("Tâche supprimée"));
-                            ScaffoldMessenger.of(context).showSnackBar(sb);
-                          },
-                          child: ListTile(
-                            title: Text("${tasks[index]}\n________"),
-                          ),
-                        );
-                      },
-                      itemCount: tasks.length,
-                    ),
-            ),
+            taskList(),
           ],
         ),
       ),
@@ -106,6 +83,45 @@ class _TDLInterfaceState extends State<TDLInterface> {
         },
         child: Icon(_isTextFieldVisible ? Icons.close : Icons.add),
       ),
+    );
+  }
+
+  Expanded taskList() {
+    return Expanded(
+      child: tasks.isEmpty
+          ? Text("Votre liste est vide")
+          : ListView.builder(
+              itemBuilder: (context, index) {
+                return Dismissible(
+                  key: Key(tasks[index]),
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment(0.75, 0),
+                    child: Icon(Icons.delete),
+                  ),
+                  onDismissed: (direction) {
+                    String removedTask = tasks[index];
+                    final sb = SnackBar(
+                      content: Text("$removedTask supprimé"),
+                      // action: SnackBarAction(
+                      //     label: "Confirmer",
+                      //     onPressed: () {
+                      //       setState(() {
+                      //         tasks.removeAt(index);
+                      //       });
+                      //     }),
+                      //     duration: Duration(seconds: 5),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(sb);
+                    
+                  },
+                  child: ListTile(
+                    title: Text("${tasks[index]}\n________"),
+                  ),
+                );
+              },
+              itemCount: tasks.length,
+            ),
     );
   }
 
