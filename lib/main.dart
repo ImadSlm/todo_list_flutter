@@ -76,12 +76,14 @@ class _TDLInterfaceState extends State<TDLInterface> {
                   ? Text("Votre liste est vide")
                   : ListView.builder(
                       itemBuilder: (context, index) {
-                        // return ListTile(
-                        //   title: Text("${tasks[index]}\n________"),
-                        // );
                         return Dismissible(
                           key: Key(tasks[index]),
                           background: ColoredBox(color: Colors.green),
+                          onDismissed: (direction) {
+                            final sb =
+                                SnackBar(content: Text("Tâche supprimée"));
+                            ScaffoldMessenger.of(context).showSnackBar(sb);
+                          },
                           child: ListTile(
                             title: Text("${tasks[index]}\n________"),
                           ),
