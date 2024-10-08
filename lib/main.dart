@@ -31,7 +31,7 @@ class TDLInterface extends StatefulWidget {
 class _TDLInterfaceState extends State<TDLInterface> {
   final TextEditingController _taskController = TextEditingController();
   List<String> tasks = [];
-  bool _isTextFieldVisible = true; // Par défaut, la zone de texte est masquée
+  bool _isTextFieldVisible = true;
 
   void _addTask() {
     String newTask = _taskController.text;
@@ -48,20 +48,22 @@ class _TDLInterfaceState extends State<TDLInterface> {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-            child: Text(
-          "TO-DO LIST",
-          style: TextStyle(fontSize: 35),
-        )),
+          child: Row(
+            children: [
+              Icon(Icons.list_alt),
+              Text(
+                "TO-DO LIST",
+                style: TextStyle(fontSize: 35),
+              ),
+            ],
+          ),
+        ),
         backgroundColor: Colors.orange,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            if (_isTextFieldVisible) taskEntry(),
-            SizedBox(
-              height: 20,
-            ),
             Center(
               child: Text(
                 "Liste : ",
@@ -72,17 +74,36 @@ class _TDLInterfaceState extends State<TDLInterface> {
               ),
             ),
             taskList(),
+            if (_isTextFieldVisible)
+              Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      width: 3,
+                      color: Colors.orangeAccent,
+                    ),
+                  ),
+                ),
+                child: taskEntry(),
+              ),
+            SizedBox(
+              height: 20,
+            ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            _isTextFieldVisible = !_isTextFieldVisible;
-          });
-        },
-        child: Icon(_isTextFieldVisible ? Icons.close : Icons.add),
-      ),
+      floatingActionButton: floatingBtn(),
+    );
+  }
+
+  FloatingActionButton floatingBtn() {
+    return FloatingActionButton(
+      onPressed: () {
+        setState(() {
+          _isTextFieldVisible = !_isTextFieldVisible;
+        });
+      },
+      child: Icon(_isTextFieldVisible ? Icons.close : Icons.add),
     );
   }
 
@@ -97,7 +118,10 @@ class _TDLInterfaceState extends State<TDLInterface> {
                   background: Container(
                     color: Colors.red,
                     alignment: Alignment(0.75, 0),
-                    child: Icon(Icons.delete),
+                    child: Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                    ),
                   ),
                   onDismissed: (direction) {
                     String removedTask = tasks[index];
@@ -117,8 +141,18 @@ class _TDLInterfaceState extends State<TDLInterface> {
                     );
                     ScaffoldMessenger.of(context).showSnackBar(sb);
                   },
-                  child: ListTile(
-                    title: Text("${tasks[index]}\n________"),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey, width: 0.5)),
+                    child: ListTile(
+                      title: Text(
+                        "${tasks[index]}",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
                   ),
                 );
               },
