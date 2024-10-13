@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print, unnecessary_string_interpolations, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import './task_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,9 +14,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "To-Do List",
-      home: TDLInterface(),
+    return ChangeNotifierProvider(
+      create: (context) => TaskProvider(),
+      child: MaterialApp(
+        title: "To-Do List",
+        home: TDLInterface(),
+      ),
     );
   }
 }
