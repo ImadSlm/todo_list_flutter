@@ -59,20 +59,7 @@ class _TDLInterfaceState extends State<TDLInterface> {
     final _taskProvider = Provider.of<TaskProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Row(
-            children: [
-              Icon(Icons.list_alt),
-              Text(
-                "TO-DO LIST",
-                style: TextStyle(fontSize: 35),
-              ),
-            ],
-          ),
-        ),
-        backgroundColor: Colors.orange,
-      ),
+      appBar: _appBar(),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -106,6 +93,23 @@ class _TDLInterfaceState extends State<TDLInterface> {
         ),
       ),
       floatingActionButton: floatingBtn(),
+    );
+  }
+
+  AppBar _appBar() {
+    return AppBar(
+      title: Center(
+        child: Row(
+          children: [
+            Icon(Icons.list_alt),
+            Text(
+              "TO-DO LIST",
+              style: TextStyle(fontSize: 35),
+            ),
+          ],
+        ),
+      ),
+      backgroundColor: Colors.orange,
     );
   }
 
