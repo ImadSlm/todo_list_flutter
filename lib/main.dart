@@ -125,7 +125,7 @@ class _TDLInterfaceState extends State<TDLInterface> {
   }
 
   Expanded buildTaskList(TaskProvider _taskProvider) {
-    void _removeTask(Task task) {
+    void _removeTaskOrCancel(Task task) {
       setState(() {
         _taskProvider.removeTask(task);
       });
@@ -160,7 +160,7 @@ class _TDLInterfaceState extends State<TDLInterface> {
                     ),
                   ),
                   onDismissed: (direction) {
-                    _removeTask(task);
+                    _removeTaskOrCancel(task);
                   },
                   child: Container(
                     decoration: BoxDecoration(
