@@ -135,18 +135,18 @@ class _TDLInterfaceState extends State<TDLInterface> {
                     setState(() {
                       _taskProvider.removeTask(task);
                     });
-                    final sb = SnackBar(
-                      content: Text("${task.title} supprimé"),
-                      // action: SnackBarAction(
-                      //     label: "Annuler",
-                      //     onPressed: () {
-                      //       setState(() {
-                      //         tasks.insert(index, task.title);
-                      //       });
-                      //     }),
+                    final sbDeleted = SnackBar(
+                      content: Text("${task.title} supprimée"),
+                      action: SnackBarAction(
+                          label: "Annuler",
+                          onPressed: () {
+                            setState(() {
+                              _taskProvider.addTask(task.title);
+                            });
+                          }),
                       duration: Duration(seconds: 5),
                     );
-                    ScaffoldMessenger.of(context).showSnackBar(sb);
+                    ScaffoldMessenger.of(context).showSnackBar(sbDeleted);
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -164,6 +164,14 @@ class _TDLInterfaceState extends State<TDLInterface> {
                         value: task.isDone,
                         onChanged: (value) {
                           _taskProvider.taskFinished(task);
+                          final sbDone = SnackBar(
+                            content: Text("${task.title} terminée"),
+                            duration: Duration(seconds: 1),
+                          );
+                          task.isDone
+                              ? ScaffoldMessenger.of(context)
+                                  .showSnackBar(sbDone)
+                              : null;
                         },
                       ),
                     ),
