@@ -49,6 +49,12 @@ class _TDLInterfaceState extends State<TDLInterface> {
   }
 
   @override
+  void dispose() {
+    _taskController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final _taskProvider = Provider.of<TaskProvider>(context);
 
@@ -80,7 +86,7 @@ class _TDLInterfaceState extends State<TDLInterface> {
                 textDirection: TextDirection.ltr,
               ),
             ),
-            taskList(_taskProvider),
+            buildTaskList(_taskProvider),
             if (_isTextFieldVisible)
               Container(
                 decoration: BoxDecoration(
@@ -114,7 +120,25 @@ class _TDLInterfaceState extends State<TDLInterface> {
     );
   }
 
-  Expanded taskList(TaskProvider _taskProvider) {
+  Expanded buildTaskList(TaskProvider _taskProvider) {
+    void _removeTask(Task task) {
+      setState(() {
+        _taskProvider.removeTask(task);
+      });
+      final sbDeleted = SnackBar(
+        content: Text("${task.title} supprimée"),
+        action: SnackBarAction(
+            label: "Annuler",
+            onPressed: () {
+              setState(() {
+                _taskProvider.addTask(task.title);
+              });
+            }),
+        duration: Duration(seconds: 5),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(sbDeleted);
+    }
+
     return Expanded(
       child: _taskProvider.tasks.isEmpty
           ? Text("Votre liste est vide")
@@ -132,21 +156,7 @@ class _TDLInterfaceState extends State<TDLInterface> {
                     ),
                   ),
                   onDismissed: (direction) {
-                    setState(() {
-                      _taskProvider.removeTask(task);
-                    });
-                    final sbDeleted = SnackBar(
-                      content: Text("${task.title} supprimée"),
-                      action: SnackBarAction(
-                          label: "Annuler",
-                          onPressed: () {
-                            setState(() {
-                              _taskProvider.addTask(task.title);
-                            });
-                          }),
-                      duration: Duration(seconds: 5),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(sbDeleted);
+                    _removeTask(task);
                   },
                   child: Container(
                     decoration: BoxDecoration(
