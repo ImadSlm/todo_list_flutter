@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print, unnecessary_string_interpolations, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import './task_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,9 +14,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "To-Do List",
-      home: TDLInterface(),
+    return ChangeNotifierProvider(
+      create: (context) => TaskProvider(),
+      child: MaterialApp(
+        title: "To-Do List",
+        home: TDLInterface(),
+      ),
     );
   }
 }
@@ -33,33 +38,26 @@ class _TDLInterfaceState extends State<TDLInterface> {
   List<String> tasks = [];
   bool _isTextFieldVisible = true;
 
-  void _addTask() {
+  void _addTask(TaskProvider _taskProvider) {
     String newTask = _taskController.text;
     if (newTask.isNotEmpty) {
-      setState(() {
-        tasks.add(newTask);
-      });
+        _taskProvider.addTask(newTask);
       _taskController.clear();
     }
   }
 
   @override
+  void dispose() {
+    _taskController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final _taskProvider = Provider.of<TaskProvider>(context);
+
     return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Row(
-            children: [
-              Icon(Icons.list_alt),
-              Text(
-                "TO-DO LIST",
-                style: TextStyle(fontSize: 35),
-              ),
-            ],
-          ),
-        ),
-        backgroundColor: Colors.orange,
-      ),
+      appBar: _appBar(),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -73,7 +71,7 @@ class _TDLInterfaceState extends State<TDLInterface> {
                 textDirection: TextDirection.ltr,
               ),
             ),
-            taskList(),
+            buildTaskList(_taskProvider),
             if (_isTextFieldVisible)
               Container(
                 decoration: BoxDecoration(
@@ -84,7 +82,7 @@ class _TDLInterfaceState extends State<TDLInterface> {
                     ),
                   ),
                 ),
-                child: taskEntry(),
+                child: taskEntry(_taskProvider),
               ),
             SizedBox(
               height: 20,
@@ -93,6 +91,23 @@ class _TDLInterfaceState extends State<TDLInterface> {
         ),
       ),
       floatingActionButton: floatingBtn(),
+    );
+  }
+
+  AppBar _appBar() {
+    return AppBar(
+      title: Center(
+        child: Row(
+          children: [
+            Icon(Icons.list_alt),
+            Text(
+              "TO-DO LIST",
+              style: TextStyle(fontSize: 35),
+            ),
+          ],
+        ),
+      ),
+      backgroundColor: Colors.orange,
     );
   }
 
@@ -107,14 +122,29 @@ class _TDLInterfaceState extends State<TDLInterface> {
     );
   }
 
-  Expanded taskList() {
+  Expanded buildTaskList(TaskProvider _taskProvider) {
+    void _removeTaskOrCancel(Task task) {
+        _taskProvider.removeTask(task);
+      final sbDeleted = SnackBar(
+        content: Text("${task.title} supprimée"),
+        action: SnackBarAction(
+            label: "Annuler",
+            onPressed: () {
+                _taskProvider.addTask(task.title);
+            }),
+        duration: Duration(seconds: 5),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(sbDeleted);
+    }
+
     return Expanded(
-      child: tasks.isEmpty
+      child: _taskProvider.tasks.isEmpty
           ? Text("Votre liste est vide")
           : ListView.builder(
               itemBuilder: (context, index) {
+                final task = _taskProvider.tasks[index];
                 return Dismissible(
-                  key: Key(tasks[index]),
+                  key: Key(task.title),
                   background: Container(
                     color: Colors.red,
                     alignment: Alignment(0.75, 0),
@@ -124,44 +154,44 @@ class _TDLInterfaceState extends State<TDLInterface> {
                     ),
                   ),
                   onDismissed: (direction) {
-                    String removedTask = tasks[index];
-                    setState(() {
-                      tasks.removeAt(index);
-                    });
-                    final sb = SnackBar(
-                      content: Text("$removedTask supprimé"),
-                      action: SnackBarAction(
-                          label: "Annuler",
-                          onPressed: () {
-                            setState(() {
-                              tasks.insert(index, removedTask);
-                            });
-                          }),
-                      duration: Duration(seconds: 5),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(sb);
+                    _removeTaskOrCancel(task);
                   },
                   child: Container(
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey, width: 0.5)),
                     child: ListTile(
                       title: Text(
-                        "${tasks[index]}",
+                        task.title,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
                         ),
                       ),
+                      tileColor: task.isDone ? Colors.lightGreen : Colors.white,
+                      trailing: Checkbox(
+                        value: task.isDone,
+                        onChanged: (value) {
+                          _taskProvider.taskFinished(task);
+                          final sbDone = SnackBar(
+                            content: Text("${task.title} terminée"),
+                            duration: Duration(seconds: 1),
+                          );
+                          task.isDone
+                              ? ScaffoldMessenger.of(context)
+                                  .showSnackBar(sbDone)
+                              : null;
+                        },
+                      ),
                     ),
                   ),
                 );
               },
-              itemCount: tasks.length,
+              itemCount: _taskProvider.tasks.length,
             ),
     );
   }
 
-  Column taskEntry() {
+  Column taskEntry(TaskProvider _taskProvider) {
     return Column(
       children: [
         TextField(
@@ -172,7 +202,12 @@ class _TDLInterfaceState extends State<TDLInterface> {
           height: 15,
         ),
         ElevatedButton(
-          onPressed: _addTask,
+          onPressed: () {
+            if (_taskController.text.isNotEmpty) {
+              _taskProvider.addTask(_taskController.text);
+              _taskController.clear();
+            }
+          },
           child: Icon(Icons.add_task),
         ),
       ],
