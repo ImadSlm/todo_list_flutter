@@ -41,9 +41,7 @@ class _TDLInterfaceState extends State<TDLInterface> {
   void _addTask(TaskProvider _taskProvider) {
     String newTask = _taskController.text;
     if (newTask.isNotEmpty) {
-      setState(() {
         _taskProvider.addTask(newTask);
-      });
       _taskController.clear();
     }
   }
@@ -126,17 +124,13 @@ class _TDLInterfaceState extends State<TDLInterface> {
 
   Expanded buildTaskList(TaskProvider _taskProvider) {
     void _removeTaskOrCancel(Task task) {
-      setState(() {
         _taskProvider.removeTask(task);
-      });
       final sbDeleted = SnackBar(
         content: Text("${task.title} supprimée"),
         action: SnackBarAction(
             label: "Annuler",
             onPressed: () {
-              setState(() {
                 _taskProvider.addTask(task.title);
-              });
             }),
         duration: Duration(seconds: 5),
       );
